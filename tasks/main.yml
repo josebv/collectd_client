@@ -1,0 +1,11 @@
+- name: install collectd
+  yum: name={{item}} state=present
+  with_items:
+  - collectd
+- name: collectd generic config
+  template: src=collectd.conf.j2 dest=/etc/collectd.conf owner=root mode=0644
+- name: selinux / collectd
+  seboolean: name=collectd_tcp_network_connect state=yes persistent=yes
+  ignore_errors: yes
+- name: collectd service
+  service: name=collectd state=restarted enabled=yes

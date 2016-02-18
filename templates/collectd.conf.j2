@@ -1,0 +1,45 @@
+
+Hostname    "{{ansible_hostname}}"
+AutoLoadPlugin true
+Interval 60
+
+LoadPlugin cpu
+LoadPlugin df
+#LoadPlugin ethstat
+LoadPlugin interface
+LoadPlugin load
+LoadPlugin memory
+LoadPlugin tcpconns
+LoadPlugin uptime
+LoadPlugin vmem
+LoadPlugin write_graphite
+
+<Plugin df>
+       Interval 1800
+       FSType sysfs
+       FSType proc
+       FSType devtmpfs
+       FSType devpts
+       FSType tmpfs
+       FSType fusectl
+       FSType cgroup
+       IgnoreSelected true
+       ValuesAbsolute true
+       ValuesPercentage true
+</Plugin>
+
+<Plugin write_graphite>
+  <Node "{{ansible_hostname}}">
+    Host "{{graphite}}"
+    Port "2003"
+    Protocol "tcp"
+    LogSendErrors true
+#    Prefix "collectd."
+    StoreRates true
+    AlwaysAppendDS false
+    EscapeCharacter "_"
+  </Node>
+</Plugin>
+
+Include "/etc/collectd.d"
+
