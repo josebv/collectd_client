@@ -1,5 +1,11 @@
 - name: install collectd
+  when: ansible_os_family == 'RedHat'
   yum: name={{item}} state=present
+  with_items:
+  - collectd
+- name: install collectd
+  when: ansible_os_family == 'Debian'
+  apt: name={{item}} state=present
   with_items:
   - collectd
 - name: collectd generic config
